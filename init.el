@@ -1,5 +1,5 @@
-;;(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3") ;; Fixes https://emacs.stackexchange.com/questions/51721/failed-to-download-gnu-archive
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.2")
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3") ;; Fixes https://emacs.stackexchange.com/questions/51721/failed-to-download-gnu-archive
+;;(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.2")
 
 
 ;; Disable startup screen.
@@ -11,6 +11,18 @@
 ;; Make the recentf bigger:
 (setq recentf-max-saved-items nil) ;; nil = unlimited   ;;(setq recentf-max-saved-items 1000000) ;;(setq recentf-max-saved-items 200)
 (setq recentf-keep nil) ;; ACTUALLY keeps stuff!... since if it is not accessible, like on an external drive that was removed, recentf.el will *remove* it from the list unless this is nil!!
+
+
+;; https://emacsredux.com/blog/2013/05/09/keep-backup-and-auto-save-files-out-of-the-way/ :
+;; store all backup and autosave files in [a custom] dir
+(setq backup-directory-alist
+      `((".*" . ,"~/.emacs.d-backups")))
+(setq auto-save-file-name-transforms
+      `((".*" ,"~/.emacs.d-auto-saves/" t)))
+
+;; Inserting with a mark selected will replace the text with this:
+(delete-selection-mode 1) ;; https://www.emacswiki.org/emacs/DeleteSelectionMode
+
 
 
 ;; https://github.com/siraben/dotfiles/blob/295a170231b08f2ea3e69c13eb035251bf60d564/emacs/.emacs.d/modules/siraben-packages.el ;;
@@ -25,17 +37,17 @@
 (package-initialize)
 
 ;; https://www.reddit.com/r/emacs/comments/mlm3g3/unable_to_install_packages_from_melpa/ ;;
-(defun load-history-filename-element (file-regexp)
-(let* ((loads load-history)
- (load-elt (and loads (car loads))))
-(save-match-data
-  (while (and loads
-  (or (null (car load-elt))
-      (not (stringp (car load-elt)))
-      (not (string-match file-regexp (car load-elt)))))
- (setq loads (cdr loads)
-    load-elt (and loads (car loads)))))
-  load-elt))
+;; (defun load-history-filename-element (file-regexp)
+;; (let* ((loads load-history)
+;;  (load-elt (and loads (car loads))))
+;; (save-match-data
+;;   (while (and loads
+;;   (or (null (car load-elt))
+;;       (not (stringp (car load-elt)))
+;;       (not (string-match file-regexp (car load-elt)))))
+;;  (setq loads (cdr loads)
+;;     load-elt (and loads (car loads)))))
+;;   load-elt))
 ;; ;;
 
 ;; For when the below `Ensure `use-package' is installed.` part fails, run M-x my-package-fix
@@ -46,6 +58,7 @@
   (package-refresh-contents)
   (package-install 'gnu-elpa-keyring-update)
   (setq package-check-signature "allow-unsigned")
+  ;;(setq package-check-signature nil)
   )
 
 ;; Ensure `use-package' is installed.
@@ -61,16 +74,6 @@
 ;; ;;
 
 
-
-;; https://emacsredux.com/blog/2013/05/09/keep-backup-and-auto-save-files-out-of-the-way/ :
-;; store all backup and autosave files in [a custom] dir
-(setq backup-directory-alist
-      `((".*" . ,"~/.emacs.d-backups")))
-(setq auto-save-file-name-transforms
-      `((".*" ,"~/.emacs.d-auto-saves/" t)))
-
-;; Inserting with a mark selected will replace the text with this:
-(delete-selection-mode 1) ;; https://www.emacswiki.org/emacs/DeleteSelectionMode
 
 ;; Load theme:
 (use-package mood-one-theme
