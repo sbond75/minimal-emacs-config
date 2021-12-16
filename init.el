@@ -19,6 +19,16 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
+;; For when the below `Ensure `use-package' is installed.` part fails, run M-x my-package-fix
+(defun my-package-fix ()
+  (interactive)
+  ;; https://emacs.stackexchange.com/questions/233/how-to-proceed-on-package-el-signature-check-failure/53142#53142 , https://www.reddit.com/r/emacs/comments/elghvv/toubleshooting_gpg_cant_check_signature_no_public/
+  (setq package-check-signature nil)
+  (package-refresh-contents)
+  (package-install 'gnu-elpa-keyring-update)
+  (setq package-check-signature "allow-unsigned")
+  )
+
 ;; Ensure `use-package' is installed.
 (unless (package-installed-p 'use-package)
   (progn (package-refresh-contents)
