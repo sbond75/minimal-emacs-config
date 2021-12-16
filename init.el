@@ -1,4 +1,5 @@
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3") ;; Fixes https://emacs.stackexchange.com/questions/51721/failed-to-download-gnu-archive
+;;(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3") ;; Fixes https://emacs.stackexchange.com/questions/51721/failed-to-download-gnu-archive
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.2")
 
 
 ;; Disable startup screen.
@@ -16,8 +17,26 @@
 
 ;; Initialize package.el
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;; https://emacs.stackexchange.com/questions/53105/getting-error-failed-to-download-gnu-archive-on-emacs-26-3
+(add-to-list 'package-archives
+         '("gnu" . "https://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives
+	     '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
+
+;; https://www.reddit.com/r/emacs/comments/mlm3g3/unable_to_install_packages_from_melpa/ ;;
+(defun load-history-filename-element (file-regexp)
+(let* ((loads load-history)
+ (load-elt (and loads (car loads))))
+(save-match-data
+  (while (and loads
+  (or (null (car load-elt))
+      (not (stringp (car load-elt)))
+      (not (string-match file-regexp (car load-elt)))))
+ (setq loads (cdr loads)
+    load-elt (and loads (car loads)))))
+  load-elt))
+;; ;;
 
 ;; For when the below `Ensure `use-package' is installed.` part fails, run M-x my-package-fix
 (defun my-package-fix ()
