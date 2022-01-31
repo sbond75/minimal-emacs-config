@@ -75,6 +75,16 @@
 
 
 
+;; https://emacsredux.com/blog/2013/05/09/keep-backup-and-auto-save-files-out-of-the-way/ :
+;; store all backup and autosave files in [a custom] dir
+(setq backup-directory-alist
+      `((".*" . ,"~/.emacs.d-backups")))
+(setq auto-save-file-name-transforms
+      `((".*" ,"~/.emacs.d-auto-saves/" t)))
+
+;; Inserting with a mark selected will replace the text with this:
+(delete-selection-mode 1) ;; https://www.emacswiki.org/emacs/DeleteSelectionMode
+
 ;; Load theme:
 (use-package mood-one-theme
   :demand
